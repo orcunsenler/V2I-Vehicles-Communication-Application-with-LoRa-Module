@@ -1,0 +1,60 @@
+#include <TinyGPS++.h>
+#include <SoftwareSerial.h>
+
+int RXPin = 2;
+int TXPin = 3;
+
+SoftwareSerial LoRaSerial(10, 11);
+SoftwareSerial gpsSerial(RXPin, TXPin);
+
+TinyGPSPlus gps;
+String latitude;
+String longitude;
+String Speed;
+String data;
+
+
+void setup(){
+  Serial.begin(9600);
+  LoRaSerial.begin(9600);
+  delay(500);
+  gpsSerial.begin(9600);
+  delay(500);
+}
+
+void loop(){
+  gpsSerial.listen();
+  if(gps.location.isValid()){
+    Serial.print("Latitude: ");
+    Serial.println(gps.location.lat(), 6);
+    Serial.print("Longitude: ");
+    Serial.println(gps.location.lng(), 6);
+    Serial.print("Speed: ");
+    Serial.println(gps.speed.mps());
+    latitude = gps.location.lat();
+    longitude = gps.location.lng();
+    Speed = gps.speed.mps();
+    }
+   else
+    Serial.println( "error");
+   Delay(1000);
+
+  LoRaSerial.listen();
+  LoRaSerial.write((byte)0x00);
+  LoRaSerial.write(0x1);
+  LoRaSerial.write(0x17);
+  
+  data = ","+latitude+","+longitude+","+Speed;
+  LoRaSerial.println(data);
+  delay(500);
+}
+
+static void Delay(unsigned long ms)
+{
+  unsigned long start = millis();
+  do
+  {
+    while (gpsSerial.available())
+      gps.encode(gpsSerial.read());
+  } while (millis() - start < ms);
+}
