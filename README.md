@@ -1,1 +1,2 @@
 # V2I-Vehicles-Communication-Application-with-LoRa-Module
+Within the scope of the project, an IoT project has been implemented by simulating vehicle-to infrastructure (V2I) communication. The coordinates and speed information of the vehicle were received with the GPS sensor and sent to the Road Side Unit(RSU) via LoRa communication. Raspberry Pi,Arduino, GPS sensor and LoRa module have been used as hardware.
